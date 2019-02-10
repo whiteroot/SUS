@@ -7,6 +7,7 @@ Author: Whiteroot
  
 import time
 import sys
+import os
 import requests
 import random
 import logging
@@ -42,9 +43,7 @@ while i < len(sys.argv):
 if not _socialSiteUrl: usage()
 if not _file: usage()
 
-temp_dir = tempfile.gettempdir()
-dir_sep = '\\' if system() == 'Windows' else '/'
-_logfilename = "{}{}{}.log".format(temp_dir, dir_sep, sys.argv[0])
+_logfilename = os.path.join(tempfile.gettempdir(), "{}.log".format(sys.argv[0]))
 logging.basicConfig(format='%(asctime)s [%(filename)s] [%(funcName)s:%(lineno)d] [%(levelname)s] %(message)s', filename=_logfilename, level=logging.INFO, filemode='w')
 logging.info('URL: {}'.format(_socialSiteUrl))
 
