@@ -17,7 +17,7 @@ from plugins import twitter, instagram, tumblr
 
 def usage():
     print ('usage:')
-    print ('{} --twitter|--instagram --file <input file> [--debug]'.format(sys.argv[0]))
+    print ('{} --twitter|--instagram|--tumblr --file <input file>'.format(sys.argv[0]))
     sys.exit(1)
 
 _debug = False
@@ -58,7 +58,5 @@ with open(_file) as f:
             if r.status_code == 404:
                 print (handle)
         except:
-            t = random.randint(112,119)
-            time.sleep(t)
-        t = random.randint(2,9)
-        time.sleep(t)
+            time.sleep(random.randint(112,119))
+        time.sleep(random.randint(2,9))
