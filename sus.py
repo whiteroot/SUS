@@ -12,8 +12,7 @@ import requests
 import random
 import logging
 import tempfile
-
-HEADER = {'user-agent': 'Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; SLCC1; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 1.1.4322)'}
+from plugins import twitter, instagram, tumblr
 
 
 def usage():
@@ -23,38 +22,41 @@ def usage():
 
 _debug = False
 _file = ''
-_socialSiteUrl = None
+socialSitePlugin = None
 i = 1
 while i < len(sys.argv):
     if sys.argv[i] == '--file':
         _file = sys.argv[i+1]
         i += 2
     elif sys.argv[i] in ('--twitter', '--tw'):
-        _socialSiteUrl = 'https://twitter.com'
+        socialSitePlugin = twitter.twitter()
         i += 1
     elif sys.argv[i] in ('--insta', '--instagram', '--ig'):
-        _socialSiteUrl = 'https://instagram.com'
+        socialSitePlugin = instagram.instagram()
+        i += 1
+    elif sys.argv[i] in ('--tumblr', '--tr'):
+        socialSitePlugin = tumblr.tumblr()
         i += 1
     else:
         print ('unknown arg : {}'.format(sys.argv[i]))
         sys.exit(1)
  
-if not _socialSiteUrl: usage()
+if not socialSitePlugin: usage()
 if not _file: usage()
 
 _logfilename = os.path.join(tempfile.gettempdir(), "{}.log".format(sys.argv[0]))
 logging.basicConfig(format='%(asctime)s [%(filename)s] [%(funcName)s:%(lineno)d] [%(levelname)s] %(message)s', filename=_logfilename, level=logging.INFO, filemode='w')
-logging.info('URL: {}'.format(_socialSiteUrl))
+logging.info('URL: {}'.format(socialSitePlugin.url))
 
 with open(_file) as f:
-    for twittos in f:
-        twittos = twittos.rstrip()
-        url = _socialSiteUrl + '/' + twittos
+    for handle in f:
+        handle = handle.rstrip()
+        url = socialSitePlugin.getHandleUrl(handle)
         try:
-            r = requests.get(url, headers=HEADER)
-            logging.info("[{}] status code : {}".format(twittos, r.status_code))
+            r = requests.get(url, headers=socialSitePlugin.headers)
+            logging.info("[{}] status code : {}".format(handle, r.status_code))
             if r.status_code == 404:
-                print (twittos)
+                print (handle)
         except:
             t = random.randint(112,119)
             time.sleep(t)
