@@ -7,11 +7,11 @@ By scraping the social site, SUS will tell you which usernames (from the provide
 
 ## Quickstart
 
-The software requires python 2 and pip.
+This software requires python 3.
 
 To install, setup and run the software:
 
     $ git clone https://github.com/whiteroot/SUS.git
     $ cd SUS
-    $ ./setup.py
-    $ ./sus.py
+    $ setup.py
+    $ sus.py

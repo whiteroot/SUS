@@ -1,7 +1,6 @@
-#!/usr/bin/env python
-# coding: utf8
+#!/usr/bin/env python3
 
 import subprocess
 
-cmde = 'python -m pip install -r requirements.txt'
-p = subprocess.call(cmde, shell=True)
+cmde = 'python3 -m pip install -r requirements.txt'
+p = subprocess.run(cmde.split())

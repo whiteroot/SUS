@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# coding: utf8
+#!/usr/bin/env python3
 
 """
 Social Usernames Scraper
@@ -10,13 +9,16 @@ import time
 import sys
 import requests
 import random
+import logging
+import tempfile
+from platform import system
 
 HEADER = {'user-agent': 'Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; SLCC1; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 1.1.4322)'}
 
 
 def usage():
-    print 'usage:'
-    print '{} --twitter|--instagram --file <input file> [--debug]'.format(sys.argv[0])
+    print ('usage:')
+    print ('{} --twitter|--instagram --file <input file> [--debug]'.format(sys.argv[0]))
     sys.exit(1)
 
 _debug = False
@@ -24,10 +26,7 @@ _file = ''
 _socialSiteUrl = None
 i = 1
 while i < len(sys.argv):
-    if sys.argv[i] == '--debug':
-        _debug = True
-        i += 1
-    elif sys.argv[i] == '--file':
+    if sys.argv[i] == '--file':
         _file = sys.argv[i+1]
         i += 2
     elif sys.argv[i] in ('--twitter', '--tw'):
@@ -37,13 +36,17 @@ while i < len(sys.argv):
         _socialSiteUrl = 'https://instagram.com'
         i += 1
     else:
-        print 'unknown arg : ', sys.argv[i]
+        print ('unknown arg : {}'.format(sys.argv[i]))
         sys.exit(1)
  
 if not _socialSiteUrl: usage()
 if not _file: usage()
-if _debug:
-    print >> sys.stderr, 'URL: {}'.format(_socialSiteUrl)
+
+temp_dir = tempfile.gettempdir()
+dir_sep = '\\' if system() == 'Windows' else '/'
+_logfilename = "{}{}{}.log".format(temp_dir, dir_sep, sys.argv[0])
+logging.basicConfig(format='%(asctime)s [%(filename)s] [%(funcName)s:%(lineno)d] [%(levelname)s] %(message)s', filename=_logfilename, level=logging.INFO, filemode='w')
+logging.info('URL: {}'.format(_socialSiteUrl))
 
 with open(_file) as f:
     for twittos in f:
@@ -51,13 +54,11 @@ with open(_file) as f:
         url = _socialSiteUrl + '/' + twittos
         try:
             r = requests.get(url, headers=HEADER)
-            if _debug: print >> sys.stderr, "[%s] status code : %d" % (twittos, r.status_code)
+            logging.info("[{}] status code : {}".format(twittos, r.status_code))
             if r.status_code == 404:
-                print twittos
+                print (twittos)
         except:
             t = random.randint(112,119)
-            if _debug: print >> sys.stderr, "sleeping {} seconds...".format(t)
             time.sleep(t)
         t = random.randint(2,9)
-        if _debug: print >> sys.stderr, "sleeping {} seconds...".format(t)
         time.sleep(t)
