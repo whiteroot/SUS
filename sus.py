@@ -20,8 +20,7 @@ def usage():
     print ('{} --twitter|--instagram|--tumblr --file <input file>'.format(sys.argv[0]))
     sys.exit(1)
 
-_debug = False
-_file = ''
+_file = None
 socialSitePlugin = None
 i = 1
 while i < len(sys.argv):
