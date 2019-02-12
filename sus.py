@@ -12,12 +12,12 @@ import requests
 import random
 import logging
 import tempfile
-from plugins import twitter, instagram, tumblr
+from plugins import twitter, instagram, tumblr, pinterest
 
 
 def usage():
     print ('usage:')
-    print ('{} --twitter|--instagram|--tumblr --file <input file>'.format(sys.argv[0]))
+    print ('{} --twitter|--instagram|--tumblr|--pinterest --file <input file>'.format(sys.argv[0]))
     sys.exit(1)
 
 _file = None
@@ -35,6 +35,9 @@ while i < len(sys.argv):
         i += 1
     elif sys.argv[i] in ('--tumblr', '--tr'):
         socialSitePlugin = tumblr.tumblr()
+        i += 1
+    elif sys.argv[i] in ('--pinterest', '--pt', '--pr', '--ptr'):
+        socialSitePlugin = pinterest.pinterest()
         i += 1
     else:
         print ('unknown arg : {}'.format(sys.argv[i]))
@@ -54,8 +57,9 @@ with open(_file) as f:
         try:
             r = requests.get(url, headers=socialSitePlugin.headers)
             logging.info("[{}] status code : {}".format(handle, r.status_code))
-            if r.status_code == 404:
+            if socialSitePlugin.availableHandle(r):
                 print (handle)
-        except:
+        except Exception as e:
+            logging.error(e)
             time.sleep(random.randint(112,119))
         time.sleep(random.randint(2,9))
