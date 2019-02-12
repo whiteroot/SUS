@@ -7,3 +7,6 @@ class tumblr():
 
     def getHandleUrl(self, handle):
         return "{}://{}.{}".format(tumblr.scheme, handle, tumblr.url)
+
+    def availableHandle(self, r):
+        return r.status_code == 404

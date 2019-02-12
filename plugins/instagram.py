@@ -6,3 +6,6 @@ class instagram():
 
     def getHandleUrl(self, handle):
         return "{}://{}/{}".format(instagram.scheme, instagram.url, handle)
+
+    def availableHandle(self, r):
+        return r.status_code == 404
