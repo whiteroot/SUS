@@ -2,7 +2,7 @@
 
 ## About
 
-Provide a file to SUS and an social site (Twitter, Instagram or Tumblr)
+Provide a file to SUS and an social site (Twitter, Instagram, Pinterest or Tumblr)
 
 By scraping the social site, SUS will tell you which usernames (from the provided file) are available.
 
